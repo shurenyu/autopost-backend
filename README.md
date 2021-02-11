@@ -35,8 +35,11 @@ $ npm install
 ## Configuration
 
 ```bash
-create the .env file by usin .env.example and use correct credentials
-configure the app settings under src/config/config.ts    
+# db configuration
+  create the .env file by using .env.example and use correct credentials
+
+# app configuration
+  configure the app settings under src/config/config.ts    
 ```
 
 ## Running the app
