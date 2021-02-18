@@ -62,6 +62,7 @@ export class FeedsService {
                   headers: {
                     ...bodyFormData.getHeaders(),
                     'Authorization': token,
+                    'Content-Type': 'form-data;charset=UTF-8',
                   },
                 }).then(
                   response => {
