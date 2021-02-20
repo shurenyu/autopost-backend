@@ -8,6 +8,7 @@ import axios from 'axios';
 import { config } from '../config/config';
 import { Posts } from './entities/posts.entity';
 import { Cron } from '@nestjs/schedule';
+import { htmlToText } from "html-to-text";
 
 @Injectable()
 export class FeedsService {
@@ -35,9 +36,10 @@ export class FeedsService {
           if (rss['items'] && rss['items'].length > 0) {
             for (let j = 0; j < rss['items'].length; j++) {
               // check if already stored
+              const title = htmlToText(rss['items'][j]['title']);
               const previous = await this.postsRepository.findOne({
                 where: {
-                  title: rss['items'][j]['title'],
+                  title: title,
                   url: rss['items'][j]['url'],
                 },
               });
@@ -45,13 +47,13 @@ export class FeedsService {
               if (!previous) { // already stored
                 const postEntity = new Posts();
                 const entity = Object.assign(postEntity, {
-                  title: rss['items'][j]['title'],
+                  title: title,
                   url: rss['items'][j]['url'],
                 });
                 await this.postsRepository.save(entity);
 
                 const bodyFormData = new FormData();
-                bodyFormData.append('content', `${rss['items'][j]['title']} ${rss['items'][j]['url']}`);
+                bodyFormData.append('content', `${title} ${rss['items'][j]['url']}`);
                 bodyFormData.append('auto_share', 'true');
                 bodyFormData.append('bot_id', feeds[i].botId);
 
